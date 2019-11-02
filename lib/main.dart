@@ -10,9 +10,11 @@ void main() async {
   runApp(MaterialApp(
       home: Home(),
       theme: ThemeData(
-        hintColor: Colors.amber,
-        primaryColor: Colors.white,
-      )));
+          hintColor: Colors.amber,
+          primaryColor: Colors.white,
+          inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white))))));
 }
 
 Future<Map> getData() async {
@@ -34,44 +36,41 @@ class _HomeState extends State<Home> {
   double euro;
 
   void _realChanged(String text) {
-
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
 
     double value = double.parse(text);
-    dolarController.text = (value/dolar).toStringAsFixed(2);
-    euroController.text = (value/euro).toStringAsFixed(2);
+    dolarController.text = (value / dolar).toStringAsFixed(2);
+    euroController.text = (value / euro).toStringAsFixed(2);
   }
 
   void _dolarChanged(String text) {
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
     double value = double.parse(text);
-    realController.text = (value*dolar).toStringAsFixed(2);
-    euroController.text = (value * dolar /euro).toStringAsFixed(2);
+    realController.text = (value * dolar).toStringAsFixed(2);
+    euroController.text = (value * dolar / euro).toStringAsFixed(2);
   }
 
   void _euroChanged(String text) {
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
     double value = double.parse(text);
     realController.text = (value * euro).toStringAsFixed(2);
-    dolarController.text = (value * euro /dolar).toStringAsFixed(2);
-
+    dolarController.text = (value * euro / dolar).toStringAsFixed(2);
   }
 
-  void _clearAll(){
+  void _clearAll() {
     realController.clear();
     dolarController.clear();
     euroController.clear();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +89,10 @@ class _HomeState extends State<Home> {
             title: Text("\$ Conversor de moedas \$"),
             backgroundColor: Colors.amber,
             actions: <Widget>[
-                  FlatButton(onPressed: _clearAll,
-                  child: Icon(Icons.refresh),)
+              FlatButton(
+                onPressed: _clearAll,
+                child: Icon(Icons.refresh),
+              )
             ],
           ),
           body: FutureBuilder<Map>(
@@ -115,9 +116,10 @@ class _HomeState extends State<Home> {
                         textAlign: TextAlign.center,
                       ));
                     } else {
-
-                      dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-                      euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                      dolar =
+                          snapshot.data["results"]["currencies"]["USD"]["buy"];
+                      euro =
+                          snapshot.data["results"]["currencies"]["EUR"]["buy"];
 
                       return SingleChildScrollView(
                         padding: EdgeInsets.all(10.0),
