@@ -79,64 +79,73 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text("\$ Conversor de Moedas \$"),
-        backgroundColor: Colors.amber,
-        centerTitle: true,
-      ),
-      body: FutureBuilder<Map>(
-        future: getData(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-              return Center(
-                child: Text(
-                  "Carregando Dados...",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.amber, fontSize: 25.0),
-                ),
-              );
-            default:
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    "Erro ao carregar dados :(",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.amber, fontSize: 25.0),
-                  ),
-                );
-              } else {
-                dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
-                return SingleChildScrollView(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Icon(
-                        Icons.monetization_on,
-                        size: 150.0,
-                        color: Colors.amber,
+      children: [
+        Image.asset(
+          "images/moedas.png",
+          height: 1000.0,
+          fit: BoxFit.fill,
+        ),
+        Scaffold(
+          backgroundColor: Color.fromRGBO(0, 0, 0, 0.7),
+          appBar: AppBar(
+            title: Text("\$ Conversor de Moedas \$"),
+            backgroundColor: Colors.amber,
+            centerTitle: true,
+          ),
+          body: FutureBuilder<Map>(
+            future: getData(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Center(
+                    child: Text(
+                      "Carregando Dados...",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.amber, fontSize: 25.0),
+                    ),
+                  );
+                default:
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Erro ao carregar dados :(",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.amber, fontSize: 25.0),
                       ),
-                      Divider(),
-                      buildTextField(
-                          "Reais", "R\$", realController, _realChanged),
-                      Divider(),
-                      buildTextField(
-                          "Dólares", "US\$", dolarController, _dolarChanged),
-                      Divider(),
-                      buildTextField("Euros", "€", euroController, _euroChanged)
-                    ],
-                  ),
-                );
+                    );
+                  } else {
+                    dolar =
+                        snapshot.data["results"]["currencies"]["USD"]["buy"];
+                    euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Icon(
+                            Icons.monetization_on,
+                            size: 150.0,
+                            color: Colors.amber,
+                          ),
+                          Divider(),
+                          buildTextField(
+                              "Reais", "R\$", realController, _realChanged),
+                          Divider(),
+                          buildTextField("Dólares", "US\$", dolarController,
+                              _dolarChanged),
+                          Divider(),
+                          buildTextField(
+                              "Euros", "€", euroController, _euroChanged)
+                        ],
+                      ),
+                    );
+                  }
               }
-          }
-        },
-      ),
-    );],
+            },
+          ),
+        )
+      ],
     );
   }
 }
@@ -149,6 +158,8 @@ Widget buildTextField(String label, String symbol,
     keyboardType: TextInputType.numberWithOptions(decimal: true),
     style: TextStyle(color: Colors.amber, fontSize: 25.0),
     decoration: InputDecoration(
+        fillColor: Colors.black,
+        filled: true,
         labelText: label,
         labelStyle: TextStyle(color: Colors.amber),
         border: OutlineInputBorder(),
