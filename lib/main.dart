@@ -91,6 +91,15 @@ class _HomeState extends State<Home> {
             title: Text("\$ Conversor de Moedas \$"),
             backgroundColor: Colors.amber,
             centerTitle: true,
+            actions: <Widget>[
+              TextButton(
+                onPressed: _clearAll,
+                child: Icon(
+                  Icons.refresh,
+                  color: Colors.black,
+                ),
+              )
+            ],
           ),
           body: FutureBuilder<Map>(
             future: getData(),
