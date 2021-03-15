@@ -78,83 +78,90 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Image.asset(
-          "images/moedas.png",
-          height: 1000.0,
-          fit: BoxFit.fill,
-        ),
-        Scaffold(
-          backgroundColor: Color.fromRGBO(0, 0, 0, 0.7),
-          appBar: AppBar(
-            title: Text("\$ Conversor de Moedas \$"),
-            backgroundColor: Colors.amber,
-            centerTitle: true,
-            actions: <Widget>[
-              TextButton(
-                onPressed: _clearAll,
-                child: Icon(
-                  Icons.refresh,
-                  color: Colors.black,
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(0, 0, 0, 0.7),
+      appBar: AppBar(
+        title: Text("\$ Conversor de Moedas \$"),
+        backgroundColor: Colors.amber,
+        centerTitle: true,
+        actions: <Widget>[
+          TextButton(
+            onPressed: _clearAll,
+            child: Icon(
+              Icons.refresh,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
+      body: FutureBuilder<Map>(
+        future: getData(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(
+                child: Text(
+                  "Carregando Dados...",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.amber, fontSize: 25.0),
                 ),
-              )
-            ],
-          ),
-          body: FutureBuilder<Map>(
-            future: getData(),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  return Center(
-                    child: Text(
-                      "Carregando Dados...",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.amber, fontSize: 25.0),
+              );
+            default:
+              if (snapshot.hasError) {
+                return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("images/moedas.png"),
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                  );
-                default:
-                  if (snapshot.hasError) {
-                    return Center(
+                    child: Center(
                       child: Text(
                         "Erro ao carregar dados :(",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.amber, fontSize: 25.0),
                       ),
-                    );
-                  } else {
-                    dolar =
-                        snapshot.data["results"]["currencies"]["USD"]["buy"];
-                    euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
-                    return SingleChildScrollView(
-                      padding: EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Icon(
-                            Icons.monetization_on,
-                            size: 150.0,
-                            color: Colors.amber,
-                          ),
-                          Divider(),
-                          buildTextField(
-                              "Reais", "R\$", realController, _realChanged),
-                          Divider(),
-                          buildTextField("Dólares", "US\$", dolarController,
-                              _dolarChanged),
-                          Divider(),
-                          buildTextField(
-                              "Euros", "€", euroController, _euroChanged)
-                        ],
-                      ),
-                    );
-                  }
+                    ));
+              } else {
+                dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
+                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("images/moedas.png"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Icon(
+                          Icons.monetization_on,
+                          size: 150.0,
+                          color: Colors.amber,
+                        ),
+                        Divider(),
+                        buildTextField(
+                            "Reais", "R\$", realController, _realChanged),
+                        Divider(),
+                        buildTextField(
+                            "Dólares", "US\$", dolarController, _dolarChanged),
+                        Divider(),
+                        buildTextField(
+                            "Euros", "€", euroController, _euroChanged)
+                      ],
+                    ),
+                  ),
+                );
               }
-            },
-          ),
-        )
-      ],
+          }
+        },
+      ),
     );
   }
 }
